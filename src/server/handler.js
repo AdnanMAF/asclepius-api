@@ -19,14 +19,14 @@ async function postPredictHandler(request, h) {
     createdAt: createdAt,
   };
 
-  //await storeData(id, data);
+  await storeData(id, data);
 
   const response = h.response({
     status: "success",
     message:
       confidenceScore > 99
         ? "Model is predicted successfully"
-        : "Model is predicted successfully but under threshold. Please use the correct picture",
+        : "Model is predicted successfully",
     data,
   });
   response.code(201);
@@ -34,11 +34,8 @@ async function postPredictHandler(request, h) {
 }
 
 async function predictHistories(request, h) {
-  const { model } = request.server.app;
   const { Firestore } = require("@google-cloud/firestore");
-  const db = new Firestore({
-    projectId: "submissionmlgc-adnan",
-  });
+  const db = new Firestore();
   const predictCollection = db.collection("predictions");
   const snapshot = await predictCollection.get();
   const result = [];
